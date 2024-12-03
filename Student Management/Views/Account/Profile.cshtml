@@ -1,0 +1,73 @@
+﻿@model UserProfileViewModel
+
+@{
+    ViewData["Title"] = "Profile";
+    Layout = "~/Views/Shared/_AccountLayout.cshtml";
+}
+
+<div class="container mt-5" style="max-width: 800px;">
+    <div class="card shadow-lg">
+        <div class="card-header bg-info text-black text-center">
+            <h1 class="h3 mb-0">Profile</h1>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-4">User ID</dt>
+                <dd class="col-sm-8">
+                    <span class="form-control-plaintext">:  @Model.Id</span>
+                </dd>
+
+                <dt class="col-sm-4">Username</dt>
+                <dd class="col-sm-8">
+                    <span class="form-control-plaintext">:@Model.UserName</span>
+                </dd>
+
+                <dt class="col-sm-4">Email</dt>
+                <dd class="col-sm-8">
+                    <span class="form-control-plaintext">:  @Model.Email</span>
+                </dd>
+
+                <dt class="col-sm-4">First Name</dt>
+                <dd class="col-sm-8">
+                    <span class="form-control-plaintext">:  @Model.FirstName</span>
+                </dd>
+
+                <dt class="col-sm-4">Last Name</dt>
+                <dd class="col-sm-8">
+                    <span class="form-control-plaintext">:  @Model.LastName</span>
+                </dd>
+
+                <dt class="col-sm-4">Date of Birth</dt>
+                <dd class="col-sm-8">
+                    <span class="form-control-plaintext">:  @Model.DateofBirth</span>
+                </dd>
+
+                <dt class="col-sm-4">Gender</dt>
+                <dd class="col-sm-8">
+                    <span class="form-control-plaintext">:  @Model.Gender</span>
+                </dd>
+
+                <dt class="col-sm-4">Phone Number</dt>
+                <dd class="col-sm-8">
+                    <span class="form-control-plaintext">:    @Model.PhoneNumber</span>
+                </dd>
+
+                <dt class="col-sm-4">Address</dt>
+                <dd class="col-sm-8">
+                    <span class="form-control-plaintext">:    @Model.Address</span>
+                </dd>
+            </dl>
+        </div>
+        <div class="card-footer text-center">
+            <a asp-controller="Home" asp-action="Index" class="btn btn-primary px-5 rounded-pill">
+                Back
+            </a>
+        </div>
+    </div>
+</div>
+
+       <style>
+        .btn{
+        font-size: 1rem;
+         }
+       </style>

@@ -8,27 +8,62 @@
 
 <div class="account-container">
 	<div class="account-box">
-		<h2 class="text-center mb-4">Register</h2>
+		<h2 class="text-center mb-4">User Register</h2>
 		<form asp-action="Register" method="post">
 			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 			<div class="mb-3">
-				<label asp-for="Name" class="form-label"></label>
-				<input asp-for="Name" class="form-control">
-				<span asp-validation-for="Name" class="text-danger"></span>
+				<label asp-for="FirstName" class="form-label"></label>
+				<input asp-for="FirstName" class="form-control rounded-pill">
+				<span asp-validation-for="FirstName" class="text-danger"></span>
+			</div>
+			<div class="mb-3">
+				<label asp-for="LastName" class="form-label"></label>
+				<input asp-for="LastName" class="form-control rounded-pill">
+				<span asp-validation-for="LastName" class="text-danger"></span>
+			</div>
+			<div class="mb-3">
+				<label asp-for="DateofBirth" class="form-label"></label>
+				<input asp-for="DateofBirth" class="form-control rounded-pill" type="date" min="1980-01-01" max="2014-12-31" />
+			</div>
+			<div class="mb-3">
+				<label asp-for="Gender" class="form-label"></label>
+				<select asp-for="Gender" class="form-select rounded-pill" aria-label="Small select example">
+					<option selected>---Select--- </option>
+					<option value="Male">Male</option>
+					<option value="Female">Female</option>
+
+				</select>
+			</div>
+			<div class="mb-3">
+				<label asp-for="Address" class="form-label"></label>
+				<input asp-for="Address" class="form-control rounded-pill" />
+			</div>
+
+			<div class="mb-3">
+				<label asp-for="PhoneNumber" class="form-label"></label>
+				<input asp-for="PhoneNumber"
+					   class="form-control rounded-pill"
+					   type="text"
+					   pattern="[0-9]{10}"
+					   title="Enter a 10-digit phone number"
+					   maxlength="10"
+					   minlength="10"
+					   required
+					   oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
 			</div>
 			<div class="mb-3">
 				<label asp-for="Email" class="form-label"></label>
-				<input asp-for="Email" class="form-control">
+				<input asp-for="Email" class="form-control rounded-pill">
 				<span asp-validation-for="Email" class="text-danger"></span>
 			</div>
 			<div class="mb-3">
 				<label asp-for="Password" class="form-label"></label>
-				<input asp-for="Password" class="form-control">
+				<input asp-for="Password" class="form-control rounded-pill">
 				<span asp-validation-for="Password" class="text-danger"></span>
 			</div>
 			<div class="mb-3">
 				<label asp-for="ConfirmPassword" class="form-label"></label>
-				<input asp-for="ConfirmPassword" class="form-control">
+				<input asp-for="ConfirmPassword" class="form-control rounded-pill">
 				<span asp-validation-for="ConfirmPassword" class="text-danger"></span>
 			</div>
 		
@@ -36,8 +71,8 @@
 
 			<div class="text-center">
 				
-				<a asp-controller="Home" asp-action="Index" class="btn btn-info w-40 m-4"> Back</a>
-				<input type="submit" value="Register" class="btn btn-success w-40 m-4" />
+				<a asp-controller="Home" asp-action="Index" class="btn btn-info px-5 rounded-pill"> Back</a>
+				<input type="submit" value="Register" class="btn btn-success px-5 rounded-pill" />
 			</div>
 			<p class="text-center mt-2">
 				Already have an account? <a asp-controller="Account" asp-action="Login" class="text-decoration-none">Login</a>
@@ -52,3 +87,10 @@
 	}
 
 }
+
+<style>
+	.btn {
+		margin-right: 20px;
+		margin-left: 20px;
+	}
+</style>

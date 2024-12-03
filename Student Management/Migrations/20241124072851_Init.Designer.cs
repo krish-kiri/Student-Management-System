@@ -11,7 +11,7 @@ using Student_Management.Data;
 
 namespace Student_Management.Migrations
 {
-    [DbContext(typeof(AppDbContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     [Migration("20241124072851_Init")]
     partial class Init
     {

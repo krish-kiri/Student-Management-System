@@ -4,15 +4,16 @@ using Microsoft.AspNetCore.Identity;
 using Student_Management.Models;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Student_Management.Controllers
 {
 	public class AccountController : Controller
 	{
-		private readonly SignInManager<Users> signInManager;
-		private readonly UserManager<Users> userManager;
+		private readonly SignInManager<ApplicationUser> signInManager;
+		private readonly UserManager<ApplicationUser> userManager;
 
-		public AccountController(SignInManager<Users> signInManager, UserManager<Users> userManager)
+		public AccountController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
 		{
 			this.signInManager = signInManager;
 			this.userManager = userManager;
@@ -48,38 +49,58 @@ namespace Student_Management.Controllers
 			return View();
 		}
 
-		[HttpPost]
-		public async Task<IActionResult>Register(RegisterViewModel model)
-		{
-			if(ModelState.IsValid)
-			{
-				Users users = new Users
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> Register(RegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+				// Copy data from RegisterViewModel to ApplicationUser
+				var user = new ApplicationUser
 				{
-					FullName = model.Name,
-					Email = model.Email,
 					UserName = model.Email,
-				};
-				var result = await userManager.CreateAsync(users, model.Password);
+					Email = model.Email,
+					Gender = model.Gender,
+					FirstName = model.FirstName,
+					LastName = model.LastName,
+					DateofBirth = model.DateofBirth,
+					Address = model.Address,
+					PhoneNumber = model.PhoneNumber,
+					
 
-				if (result.Succeeded)
-				{
-					return RedirectToAction("Login", "Account");
-				}
-				else
-				{
-					foreach(var error in result.Errors)
-					{
-						ModelState.AddModelError("", error.Description);
-					}
+				}; 
 
-					return View(model);
-				}
-				
-			}
-			return View(model);
-		}
+                // Store user data in AspNetUsers database table
+                var result = await userManager.CreateAsync(user, model.Password);
 
-		public IActionResult VerifyEmail()
+                // If user is successfully created, sign-in the user using
+                // SignInManager and redirect to index action of HomeController
+                if (result.Succeeded)
+                {
+                    // If the user is signed in and in the Admin role, then it is
+                    // the Admin user that is creating a new user. 
+                    // So redirect the Admin user to ListUsers action of Administration Controller
+                    if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                    {
+                        return RedirectToAction("ListUsers", "Administration");
+                    }
+
+                    await signInManager.SignInAsync(user, isPersistent: false);
+                    return RedirectToAction("index", "home");
+                }
+
+                // If there are any errors, add them to the ModelState object
+                // which will be displayed by the validation summary tag helper
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+            }
+
+            return View(model);
+        }
+
+        public IActionResult VerifyEmail()
 		{
 			
 			return View();
@@ -162,5 +183,34 @@ namespace Student_Management.Controllers
 			return RedirectToAction("Index", "Home");
 		}
 
-	}
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Profile()
+        {
+            var user = await userManager.GetUserAsync(User); if (user == null) { return NotFound(); }
+            var model = new UserProfileViewModel
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                Email = user.Email,
+                FirstName = user.FirstName,
+				LastName = user.LastName,
+				Gender = user.Gender,
+                Address=user.Address,
+				DateofBirth = user.DateofBirth,
+				PhoneNumber = user.PhoneNumber,
+
+			
+
+            };
+
+            return View(model);
+        }
+    }
 }

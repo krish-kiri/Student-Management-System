@@ -7,18 +7,18 @@
 }
 
 <div class="account-container">
-	<div class="account-box">
+	<div class="account-box shadow-lg">
 		<h2 class="text-center mb-4">Login</h2>
 		<form asp-action="Login" method="post">
 			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 			<div class="mb-3">
 				<label asp-for="Email" class="form-label"></label>
-				<input asp-for="Email" class="form-control">
+				<input asp-for="Email" class="form-control rounded-pill">
 				<span asp-validation-for="Email" class="text-danger"></span>
 			</div>
 			<div class="mb-3">
 				<label asp-for="Password" class="form-label"></label>
-				<input asp-for="Password" class="form-control">
+				<input asp-for="Password" class="form-control rounded-pill">
 				<span asp-validation-for="Password" class="text-danger"></span>
 			</div>
 			<div class="float-end">
@@ -35,11 +35,11 @@
 			</div>
 			
 			<div class ="text-center">
-				<a asp-controller="Home" asp-action="Index" class="btn btn-info w-40 m-4 "> Back </a>
-				<input type="submit" value="Login" class="btn btn-success w-40 m-4" />
+				<a asp-controller="Home" asp-action="Index" class="btn btn-info px-5 rounded-pill "> Back </a>
+				<input type="submit" value="Login" class="btn btn-success px-5 rounded-pill" />
 				
 			</div>
-			<p class="text-center mt-2">
+			<p class="text-center mt-3">
 				Don't have an account? <a asp-controller="Account" asp-action="Register" class="text-decoration-none">Register</a>
 			</p>
 		</form>
@@ -52,3 +52,10 @@
 	}
 
 	}
+
+<style>
+	.btn {
+		margin-right: 20px;
+		margin-left:20px;
+	}
+</style>

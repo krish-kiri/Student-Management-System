@@ -1,0 +1,124 @@
+﻿@model Student_Management.Models.TeacherRoleUserViewModel
+
+@{
+    ViewBag.Title = "Edit Teacher Role User";
+}
+
+<h1 class="text-center mb-4">Edit Teacher </h1>
+
+<form asp-action="EditTeacher" method="post" class="p-4 shadow-lg rounded bg-light">
+    <input type="hidden" asp-for="Id" />
+
+    <!-- Form Group -->
+    <div class="row mb-4 align-items-center">
+        <label asp-for="UserName" class="col-sm-3 col-form-label text-end fw-bold">User Name:</label>
+        <div class="col-sm-9">
+            <input asp-for="UserName" class="form-control rounded-pill" />
+            <span asp-validation-for="UserName" class="text-danger small"></span>
+        </div>
+    </div>
+
+    <div class="row mb-4 align-items-center">
+        <label asp-for="FirstName" class="col-sm-3 col-form-label text-end fw-bold">First Name:</label>
+        <div class="col-sm-9">
+            <input asp-for="FirstName" class="form-control rounded-pill" />
+            <span asp-validation-for="FirstName" class="text-danger small"></span>
+        </div>
+    </div>
+
+    <div class="row mb-4 align-items-center">
+        <label asp-for="LastName" class="col-sm-3 col-form-label text-end fw-bold">Last Name:</label>
+        <div class="col-sm-9">
+            <input asp-for="LastName" class="form-control rounded-pill" />
+            <span asp-validation-for="LastName" class="text-danger small"></span>
+        </div>
+    </div>
+
+    <div class="row mb-4 align-items-center">
+        <label asp-for="Email" class="col-sm-3 col-form-label text-end fw-bold">Email:</label>
+        <div class="col-sm-9">
+            <input asp-for="Email" class="form-control rounded-pill" type="email"/>
+            <span asp-validation-for="Email" class="text-danger small"></span>
+        </div>
+    </div>
+
+    <div class="row mb-4 align-items-center">
+        <label asp-for="DateofBirth" class="col-sm-3 col-form-label text-end fw-bold">Date of Birth:</label>
+        <div class="col-sm-9">
+            <input asp-for="DateofBirth" class="form-control rounded-pill" type="date" min="1980-01-01" max="2014-12-31" />
+            <span asp-validation-for="DateofBirth" class="text-danger small"></span>
+        </div>
+    </div>
+
+    <div class="row mb-4 align-items-center">
+        <label asp-for="Gender" class="col-sm-3 col-form-label text-end fw-bold">Gender:</label>
+        <div class="col-sm-9">
+            <select asp-for="Gender" class="form-select rounded-pill">
+                <option selected>select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select>
+            <span asp-validation-for="Gender" class="text-danger small"></span>
+        </div>
+    </div>
+
+    <div class="row mb-4 align-items-center">
+        <label asp-for="Address" class="col-sm-3 col-form-label text-end fw-bold">Address:</label>
+        <div class="col-sm-9">
+            <input asp-for="Address" class="form-control rounded-pill" />
+            <span asp-validation-for="Address" class="text-danger small"></span>
+        </div>
+    </div>
+
+    <div class="row mb-4 align-items-center">
+        <label asp-for="PhoneNumber" class="col-sm-3 col-form-label text-end fw-bold">Phone Number:</label>
+        <div class="col-sm-9">
+            <input asp-for="PhoneNumber"
+                   class="form-control rounded-pill"
+                   type="text"
+                   pattern="[0-9]{10}"
+                   title="Enter a 10-digit phone number"
+                   maxlength="10"
+                   minlength="10"
+                   required
+                   oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+            <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="row mt-4">
+        <div class="col-sm-9 offset-sm-3 d-flex justify-content-start">
+            <a asp-action="UsersWithTeacherRole" class="btn btn-outline-danger me-3 px-5 rounded-pill">Cancel</a>
+            <input type="submit" value="Update" class="btn btn-success px-5 rounded-pill" />
+        </div>
+    </div>
+</form>
+
+<style>
+    form {
+        max-width: 800px;
+        margin: auto;
+    }
+
+    .col-form-label {
+        font-size: 1rem;
+    }
+
+    .form-control,
+    .form-select {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: box-shadow 0.3s ease;
+        width: 400px
+    }
+
+        .form-control:focus,
+        .form-select:focus {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+    .btn {
+        font-size: 1rem;
+    }
+</style>
+
