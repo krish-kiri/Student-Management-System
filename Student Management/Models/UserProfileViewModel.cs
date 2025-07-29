@@ -9,6 +9,8 @@
 
         public string Email { get; set; }
         public string Gender { get; set; }
+
+        public string Grade { get; set; }
         public int? PhoneNumber { get; set; }
         public string? Address { get; set; }
 
@@ -17,5 +19,9 @@
         public IList<string> Roles { get; set; }
         public IList<string> Subject { get; set; }
         public DateOnly? DateofBirth { get; set; }
+        public string RoleId { get; set; }
+        public string Role { get; set; }
+        public string Class { get; set; }
+        public string Division { get; set; }
     }
 }

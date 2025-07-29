@@ -14,17 +14,44 @@ namespace Student_Management.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
 
-        [Authorize(Roles="Admin")]
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+		public IActionResult Index()
+		{
+			try
+			{
+				return View();
+			}
+			catch (Exception ex)
+			{
+				
+				Console.WriteLine($"Error: {ex.Message}");
 
-        
-    }
+				
+				return View("Error"); 
+			}
+		}
+
+
+
+		[Authorize(Roles = "Admin")]
+		public IActionResult Privacy()
+		{
+			try
+			{
+				
+				return View();
+			}
+			catch (Exception ex)
+			{
+				
+				Console.WriteLine(ex.Message); 
+
+				
+				return View("Error");
+			}
+		}
+
+
+
+	}
 }

@@ -12,8 +12,8 @@ using Student_Management.Data;
 namespace Student_Management.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241129125048_Mig13")]
-    partial class Mig13
+    [Migration("20241207181404_Mig01")]
+    partial class Mig01
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -172,12 +172,18 @@ namespace Student_Management.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Class")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateOnly>("DateofBirth")
                         .HasColumnType("date");
+
+                    b.Property<string>("Division")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -187,14 +193,15 @@ namespace Student_Management.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Gender")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
@@ -249,38 +256,123 @@ namespace Student_Management.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Address")
-                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Class")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateOnly>("DateofBirth")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Division")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Gender")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PhoneNumber")
+                        .HasColumnType("int");
+
+                    b.PrimitiveCollection<string>("SelectedSubjectIds")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.PrimitiveCollection<string>("Subject")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Students");
+                });
+
+            modelBuilder.Entity("Student_Management.Models.Subject", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("StudentRoleUserViewModelId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("StudentRoleUserViewModelId1")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("SubjectName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SubjectNumber")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StudentRoleUserViewModelId");
+
+                    b.HasIndex("StudentRoleUserViewModelId1");
+
+                    b.ToTable("Subjects");
+                });
+
+            modelBuilder.Entity("Student_Management.Models.TeacherRoleUserViewModel", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateOnly>("DateofBirth")
                         .HasColumnType("date");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Gender")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PhoneNumber")
                         .HasColumnType("int");
 
                     b.Property<string>("UserName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Students");
+                    b.ToTable("Teachers");
+                });
+
+            modelBuilder.Entity("Student_Management.Models.UserSubject", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<Guid>("SubjectId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int?>("Marks")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "SubjectId");
+
+                    b.HasIndex("SubjectId");
+
+                    b.ToTable("UserSubjects");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -332,6 +424,53 @@ namespace Student_Management.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Student_Management.Models.Subject", b =>
+                {
+                    b.HasOne("Student_Management.Models.StudentRoleUserViewModel", null)
+                        .WithMany("AllSubjects")
+                        .HasForeignKey("StudentRoleUserViewModelId");
+
+                    b.HasOne("Student_Management.Models.StudentRoleUserViewModel", null)
+                        .WithMany("AssignedSubjects")
+                        .HasForeignKey("StudentRoleUserViewModelId1");
+                });
+
+            modelBuilder.Entity("Student_Management.Models.UserSubject", b =>
+                {
+                    b.HasOne("Student_Management.Models.Subject", "Subject")
+                        .WithMany("UserSubjects")
+                        .HasForeignKey("SubjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Student_Management.Models.ApplicationUser", "User")
+                        .WithMany("UserSubject")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Subject");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Student_Management.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("UserSubject");
+                });
+
+            modelBuilder.Entity("Student_Management.Models.StudentRoleUserViewModel", b =>
+                {
+                    b.Navigation("AllSubjects");
+
+                    b.Navigation("AssignedSubjects");
+                });
+
+            modelBuilder.Entity("Student_Management.Models.Subject", b =>
+                {
+                    b.Navigation("UserSubjects");
                 });
 #pragma warning restore 612, 618
         }

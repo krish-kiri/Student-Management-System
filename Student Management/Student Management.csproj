@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Student_Management</RootNamespace>
   </PropertyGroup>
@@ -28,6 +28,13 @@
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="Views\Shared\_Notification.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Views\Administration\DetailsStudent2.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

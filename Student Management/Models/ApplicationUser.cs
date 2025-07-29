@@ -18,14 +18,23 @@ namespace Student_Management.Models
 		public DateOnly DateofBirth { get; set; }
 
 
+        public string Grade { get; set; }
 
-
-		[Display(Name = "Phone Number")]
+        [Display(Name = "Phone Number")]
         public int PhoneNumber { get; set; }
 
 		public string Address { get; set; }
 
 
 
-	}
+        public ICollection<UserSubject> UserSubject { get; set; }
+
+
+
+        public bool IsActive { get; set; }
+        public string Class { get; set; }
+        public string Division { get; set; }
+
+
+    }
 }

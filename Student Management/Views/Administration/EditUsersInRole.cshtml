@@ -27,10 +27,21 @@
             }
         </div>
         <div class="card-footer">
-            <input type="submit" value="Update" class="btn btn-primary"
+            <div class="card-button">
+                <a asp-action="EditRole" asp-route-roleId="@roleId"
+                   class="btn btn-outline-danger me-3 px-5 rounded-pill" style="width:auto">Cancel</a>
+                <input type="submit" value="Update" class="btn btn-success px-5 rounded-pill"
                    style="width:auto" />
-            <a asp-action="EditRole" asp-route-roleId="@roleId"
-               class="btn btn-primary" style="width:auto">Cancel</a>
+            
+            </div>
         </div>
     </div>
 </form>
+
+<style>
+    .card {
+        width: 700px;
+        margin: auto;
+    }
+
+</style>

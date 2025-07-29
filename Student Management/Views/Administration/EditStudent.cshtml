@@ -1,15 +1,14 @@
-﻿@model Student_Management.Models.StudentRoleUserViewModel
-
+﻿@model AssignSubjectViewModel
 @{
-    ViewBag.Title = "Edit Student Role User";
+    ViewBag.Title = "Edit Student";
 }
 
-<h1 class="text-center mb-4">Edit Student </h1>
+<h1 class="text-center mb-4">Edit Student</h1>
 
-<form asp-action="EditStudent" method="post" class="p-4 shadow-lg rounded bg-light">
-    <input type="hidden" asp-for="Id" />
+<form asp-action="EditStudent" method="post" class="form p-4 shadow-lg rounded bg-light">
+    <input type="hidden" asp-for="UserId" />
 
-    <!-- Form Group -->
+   
     <div class="row mb-4 align-items-center">
         <label asp-for="UserName" class="col-sm-3 col-form-label text-end fw-bold">User Name:</label>
         <div class="col-sm-9">
@@ -41,7 +40,21 @@
             <span asp-validation-for="Email" class="text-danger small"></span>
         </div>
     </div>
-
+    <div class="row mb-4 align-items-center">
+        <label asp-for="Grade" class="col-sm-3 col-form-label text-end fw-bold">Grade:</label>
+        <div class="col-sm-9">
+            <select asp-for="Grade" class="form-select rounded-pill">
+                <option selected>select Grade</option>
+                <option value="Grade 6">Grade 6</option>
+                <option value="Grade 7">Grade 7</option>
+                <option value="Grade 8">Grade 8</option>
+                <option value="Grade 9">Grade 9</option>
+                <option value="Grade 10">Grade 10</option>
+                <option value="Grade 11">Grade 11</option>
+            </select>
+            <span asp-validation-for="Grade" class="text-danger small"></span>
+        </div>
+    </div>
     <div class="row mb-4 align-items-center">
         <label asp-for="DateofBirth" class="col-sm-3 col-form-label text-end fw-bold">Date of Birth:</label>
         <div class="col-sm-9">
@@ -86,7 +99,70 @@
         </div>
     </div>
 
-    <!-- Action Buttons -->
+    
+    <div class="form-group">
+        <div class="card mt-3">
+            <div class="card-header bg-primary text-white">
+                Assign Subjects and Marks
+            </div>
+            <div class="card-body">
+                @{
+                    
+                    var groupedSubjects = Model.Subjects.GroupBy(s => s.SubjectType);
+                }
+
+                @foreach (var subjectGroup in groupedSubjects)
+                {
+                    <div class="mb-4">
+                        
+                        <h5 class="text-secondary">@subjectGroup.Key Subjects</h5>
+                        <hr />
+                        @foreach (var subject in subjectGroup)
+                        {
+                            <div class="form-check mb-3">
+                                <input type="checkbox"
+                                       id="subjectCheckbox-@subject.SubjectId"
+                                       name="SelectedSubjectIds"
+                                       class="form-check-input subject-checkbox rounded-pill"
+                                       value="@subject.SubjectId"
+                                @(subject.IsSelected ? "checked" : "")
+                                       onchange="toggleMarksInput('@subject.SubjectId')" />
+                                <label class="form-check-label" for="subjectCheckbox-@subject.SubjectId">
+                                    @subject.SubjectName
+                                </label>
+                                <div class="form-group mt-2">
+                                    <label for="marksInput-@subject.SubjectId" class="form-label">Marks</label>
+                                    <input type="number"
+                                           id="marksInput-@subject.SubjectId"
+                                           name="Subjects[@Model.Subjects.IndexOf(subject)].Marks"
+                                           class="form-control marks-input rounded-pill"
+                                           value="@subject.Marks"
+                                           min="0" max="100"
+                                           title="Enter 0-100 marks"
+                                    @(subject.IsSelected ? "" : "disabled") />
+                                    <input type="hidden" name="Subjects[@Model.Subjects.IndexOf(subject)].SubjectId" value="@subject.SubjectId" />
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleMarksInput(subjectId) {
+            const checkbox = document.getElementById(`subjectCheckbox-${subjectId}`);
+            const marksInput = document.getElementById(`marksInput-${subjectId}`);
+            if (checkbox.checked) {
+                marksInput.removeAttribute('disabled');
+            } else {
+                marksInput.value = "";
+                marksInput.setAttribute('disabled', 'disabled');
+            }
+        }
+    </script>
+
     <div class="row mt-4">
         <div class="col-sm-9 offset-sm-3 d-flex justify-content-start">
             <a asp-action="UsersWithStudentRole" class="btn btn-outline-danger me-3 px-5 rounded-pill">Cancel</a>
@@ -96,7 +172,7 @@
 </form>
 
 <style>
-    form {
+    .form {
         max-width: 800px;
         margin: auto;
     }
@@ -109,7 +185,7 @@
     .form-select {
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         transition: box-shadow 0.3s ease;
-        width:400px
+        width: 80%; 
     }
 
         .form-control:focus,
@@ -120,5 +196,15 @@
     .btn {
         font-size: 1rem;
     }
-</style>
 
+    .p-4 {
+        padding: 2rem;
+    }
+
+    .form-group {
+        width:500px;
+       margin: auto;
+    }
+
+
+</style>

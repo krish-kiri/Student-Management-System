@@ -9,7 +9,7 @@
 <form  method="post" class="p-4 shadow-lg rounded bg-light">
     <input type="hidden" asp-for="Id" />
 
-    <!-- Form Group -->
+    
     <div class="row mb-4 align-items-center">
         <label asp-for="UserName" class="col-sm-3 col-form-label text-end fw-bold">User Name:</label>
         <div class="col-sm-9">
@@ -33,7 +33,21 @@
             <span asp-validation-for="LastName" class="text-danger small"></span>
         </div>
     </div>
-
+    <div class="row mb-4 align-items-center">
+        <label asp-for="Grade" class="col-sm-3 col-form-label text-end fw-bold">Grade:</label>
+        <div class="col-sm-9">
+            <select asp-for="Grade" class="form-select rounded-pill">
+                <option selected>select Grade</option>
+                <option value="Grade 6">Grade 6</option>
+                <option value="Grade 7">Grade 7</option>
+                <option value="Grade 8">Grade 8</option>
+                <option value="Grade 9">Grade 9</option>
+                <option value="Grade 10">Grade 10</option>
+                <option value="Grade 11">Grade 11</option>
+            </select>
+            <span asp-validation-for="Grade" class="text-danger small"></span>
+        </div>
+    </div>
     <div class="row mb-4 align-items-center">
         <label asp-for="Email" class="col-sm-3 col-form-label text-end fw-bold">Email:</label>
         <div class="col-sm-9">

@@ -1,0 +1,69 @@
+﻿@model Subject
+
+
+<div class="container">
+    <div class="card mx-auto shadow-lg" style="max-width: 1000px;">
+        <div class="card-header bg-info text-black text-center py-3">
+            <h1 class="h3 mb-0">Subject Details</h1>
+        </div>
+        <div class="card-body p-4">
+            
+            <div class="d-flex flex-column align-items-center">
+                
+
+                <div class="detail-row">
+                    <strong>Id</strong>
+                    <span>:   @Model.Id</span>
+                </div>
+                <div class="detail-row">
+                    <strong>Subject Number</strong>
+                    <span>:   @Model.SubjectNumber</span>
+                </div>
+                <div class="detail-row">
+                    <strong>SubjectName</strong>
+                    <span>:   @Model.SubjectName</span>
+                </div>
+               
+                    </
+                   
+                    <div class="text-center mt-4">
+                    <a asp-controller="Subject" asp-action="Index" class="btn btn-primary me-3 px-5 rounded-pill">
+                            Back
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 600px;
+            padding: 8px 0;
+            font-size: 1.1rem;
+            border-bottom: 1px solid #eaeaea;
+        }
+
+            .detail-row strong {
+                color: #333;
+                min-width: 200px;
+                text-align: left;
+            }
+
+            .detail-row span {
+                text-align: left;
+                color: #555;
+                flex-grow: 1;
+                padding-left: 10px;
+            }
+
+        .btn {
+            font-size: 1rem;
+        }
+    </style>
+
+

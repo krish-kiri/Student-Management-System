@@ -5,6 +5,7 @@ using Student_Management.Models;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Microsoft.AspNetCore.Authorization;
+using System.Diagnostics;
 
 namespace Student_Management.Controllers
 {
@@ -19,198 +20,305 @@ namespace Student_Management.Controllers
 			this.userManager = userManager;
 		}
 
+
+		[HttpGet]
 		public IActionResult Login()
 		{
-			return View();
+			try
+			{
+				 
+				return View();
+			}
+			catch (Exception ex)
+			{
+				
+				return View("Error");
+			}
 		}
+
+
 
 		[HttpPost]
 		public async Task<IActionResult> Login(LoginViewModel model)
 		{
+			try
+			{
+				if (ModelState.IsValid)
+				{
+					var result = await signInManager.PasswordSignInAsync(model.Email, model.Password, model.Rememberme, false);
+
+					if (result.Succeeded)
+					{
+						return RedirectToAction("Index", "Home");
+					}
+					else
+					{
+						ModelState.AddModelError("", "Email or password is incorrect.");
+						return View(model);
+					}
+				}
+				return View(model);
+			}
+			catch (Exception ex)
+			{
+				
+				ModelState.AddModelError("", "An unexpected error occurred. Please try again later.");
+
+				return View(model);
+			}
+		}
+
+
+		[HttpGet]
+		public IActionResult Register()
+		{
+			try
+			{
+				
+				return View();
+			}
+			catch (Exception ex)
+			{
+				
+				return View("Error", new { message = "An error occurred while loading the Register page." });
+			}
+		}
+
+
+
+		[HttpPost]
+		[AllowAnonymous]
+		public async Task<IActionResult> Register(RegisterViewModel model)
+		{
 			if (ModelState.IsValid)
 			{
-				var result = await signInManager.PasswordSignInAsync(model.Email, model.Password, model.Rememberme, false);
-				
-				if(result.Succeeded)
+				try
 				{
-					return RedirectToAction("Index", "Home");
+					var user = new ApplicationUser
+					{
+						UserName = model.Email,
+						Email = model.Email,
+						Gender = model.Gender,
+						FirstName = model.FirstName,
+						LastName = model.LastName,
+						DateofBirth = model.DateofBirth,
+						Address = model.Address,
+						PhoneNumber = model.PhoneNumber,
+					};
+
+					var result = await userManager.CreateAsync(user, model.Password);
+
+					if (result.Succeeded)
+					{
+						if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+						{
+							return RedirectToAction("ListUsers", "Administration");
+						}
+
+						await signInManager.SignInAsync(user, isPersistent: false);
+						return RedirectToAction("index", "home");
+					}
+
+					foreach (var error in result.Errors)
+					{
+						ModelState.AddModelError(string.Empty, error.Description);
+					}
 				}
-				else
+				catch (Exception ex)
 				{
-					ModelState.AddModelError("", "Email or passwoed is incorrect.");
-					return View(model);
+					
+					ModelState.AddModelError(string.Empty, "An unexpected error occurred while processing your request. Please try again later.");
 				}
 			}
+
 			return View(model);
 		}
 
-		public IActionResult Register()
+
+		[HttpGet]
+		public IActionResult VerifyEmail()
 		{
-			return View();
-		}
+			try
+			{
+				
+				return View();
+			}
+			catch (Exception ex)
+			{
+				
+				Console.WriteLine($"An error occurred: {ex.Message}");
 
-        [HttpPost]
-        [AllowAnonymous]
-        public async Task<IActionResult> Register(RegisterViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-				// Copy data from RegisterViewModel to ApplicationUser
-				var user = new ApplicationUser
-				{
-					UserName = model.Email,
-					Email = model.Email,
-					Gender = model.Gender,
-					FirstName = model.FirstName,
-					LastName = model.LastName,
-					DateofBirth = model.DateofBirth,
-					Address = model.Address,
-					PhoneNumber = model.PhoneNumber,
-					
-
-				}; 
-
-                // Store user data in AspNetUsers database table
-                var result = await userManager.CreateAsync(user, model.Password);
-
-                // If user is successfully created, sign-in the user using
-                // SignInManager and redirect to index action of HomeController
-                if (result.Succeeded)
-                {
-                    // If the user is signed in and in the Admin role, then it is
-                    // the Admin user that is creating a new user. 
-                    // So redirect the Admin user to ListUsers action of Administration Controller
-                    if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
-                    {
-                        return RedirectToAction("ListUsers", "Administration");
-                    }
-
-                    await signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("index", "home");
-                }
-
-                // If there are any errors, add them to the ModelState object
-                // which will be displayed by the validation summary tag helper
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
-                }
-            }
-
-            return View(model);
-        }
-
-        public IActionResult VerifyEmail()
-		{
 			
-			return View();
+				return View("Error");
+			}
 		}
+
+
 
 		[HttpPost]
 		public async Task<IActionResult> VerifyEmail(VerifyEmailViewModel model)
 		{
-			if (ModelState.IsValid)
+			try
 			{
-				var user = await userManager.FindByNameAsync(model.Email);
-
-				if (user == null)
+				if (ModelState.IsValid)
 				{
-					ModelState.AddModelError("", "Something is wrong!");
-					return View(model);
-				}
-				else
-				{
-					return RedirectToAction("ChangePassword", "Account", new { username = user.UserName });
+					var user = await userManager.FindByNameAsync(model.Email);
 
-				}
-
-			} 
-			return View(model);
-		}
-
-		public IActionResult ChangePassword(string username)
-		{
-			if (string.IsNullOrEmpty(username))
-			{
-				return RedirectToAction("VerifyEmail", "Account");
-			}
-			return View(new ChangePasswordViewModel { Email = username});
-		}
-
-		[HttpPost]
-		public async Task<IActionResult>ChangePassword(ChangePasswordViewModel model)
-		{
-			if (ModelState.IsValid)
-			{
-				var user = await userManager.FindByNameAsync(model.Email);
-				if (user !=null)
-				{
-					var result = await userManager.RemovePasswordAsync(user);
-					if (result.Succeeded)
+					if (user == null)
 					{
-						 result = await userManager.AddPasswordAsync(user, model.NewPassword);
-						return RedirectToAction("Login", "Account");
-					}
-
-					else
-					{
-						foreach (var error in result.Errors)
-						{
-							ModelState.AddModelError("", error.Description);
-						}
+						ModelState.AddModelError("", "Something is wrong!");
 						return View(model);
 					}
+					else
+					{
+						return RedirectToAction("ChangePassword", "Account", new { username = user.UserName });
+					}
+				}
+				return View(model);
+			}
+			catch (Exception)
+			{
+			
+				ModelState.AddModelError("", "An error occurred while processing your request. Please try again later.");
+				return View(model);
+			}
+		}
 
+
+
+		[HttpGet]
+		public IActionResult ChangePassword(string username)
+		{
+			try
+			{
+				if (string.IsNullOrEmpty(username))
+				{
+					return RedirectToAction("VerifyEmail", "Account");
+				}
+				return View(new ChangePasswordViewModel { Email = username });
+			}
+			catch (Exception ex)
+			{
+			
+				return RedirectToAction("Error", "Home");
+			}
+		}
+
+
+
+		[HttpPost]
+		public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+		{
+			try
+			{
+				if (ModelState.IsValid)
+				{
+					var user = await userManager.FindByNameAsync(model.Email);
+					if (user != null)
+					{
+						var result = await userManager.RemovePasswordAsync(user);
+						if (result.Succeeded)
+						{
+							result = await userManager.AddPasswordAsync(user, model.NewPassword);
+							return RedirectToAction("Login", "Account");
+						}
+						else
+						{
+							foreach (var error in result.Errors)
+							{
+								ModelState.AddModelError("", error.Description);
+							}
+							return View(model);
+						}
+					}
+					else
+					{
+						ModelState.AddModelError("", "Email not found!");
+						return View(model);
+					}
 				}
 				else
 				{
-					ModelState.AddModelError("", "Email not found!");
+					ModelState.AddModelError("", "Something went wrong. Try again.");
 					return View(model);
 				}
-
 			}
-			else
+			catch (Exception ex)
 			{
-				ModelState.AddModelError("", "Somthing went wrong. try again.");
+				
+				ModelState.AddModelError("", "An error occurred while changing the password. Please try again later.");
+
 				return View(model);
-
-			}	
+			}
 		}
 
-		public async Task<IActionResult>Logout()
+
+		public async Task<IActionResult> Logout()
 		{
-			await signInManager.SignOutAsync();
-			return RedirectToAction("Index", "Home");
+			try
+			{
+				await signInManager.SignOutAsync();
+				return RedirectToAction("Index", "Home");
+			}
+			catch (Exception ex)
+			{
+				
+               return RedirectToAction("Error", "Home");
+			}
 		}
 
-        [HttpGet]
-        [AllowAnonymous]
-        public IActionResult AccessDenied()
-        {
-            return View();
-        }
 
-        [Authorize]
-        public async Task<IActionResult> Profile()
-        {
-            var user = await userManager.GetUserAsync(User); if (user == null) { return NotFound(); }
-            var model = new UserProfileViewModel
-            {
-                Id = user.Id,
-                UserName = user.UserName,
-                Email = user.Email,
-                FirstName = user.FirstName,
-				LastName = user.LastName,
-				Gender = user.Gender,
-                Address=user.Address,
-				DateofBirth = user.DateofBirth,
-				PhoneNumber = user.PhoneNumber,
 
+		[HttpGet]
+		[AllowAnonymous]
+		public IActionResult AccessDenied()
+		{
+			try
+			{
+				return View();
+			}
+			catch (Exception ex)
+			{
 			
+				return View("Error");
+			}
+		}
 
-            };
 
-            return View(model);
-        }
-    }
+
+		[Authorize]
+		public async Task<IActionResult> Profile()
+		{
+			try
+			{
+				var user = await userManager.GetUserAsync(User);
+				if (user == null)
+				{
+					return NotFound();
+				}
+
+				var model = new UserProfileViewModel
+				{
+					Id = user.Id,
+					UserName = user.UserName,
+					Email = user.Email,
+					FirstName = user.FirstName,
+					LastName = user.LastName,
+					Grade = user.Grade,
+					Gender = user.Gender,
+					Address = user.Address,
+					DateofBirth = user.DateofBirth,
+					PhoneNumber = user.PhoneNumber,
+				};
+
+				return View(model);
+			}
+			catch (Exception ex)
+			{
+				
+				return View("Error", new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+			}
+		}
+
+	}
 }

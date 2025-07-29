@@ -16,9 +16,12 @@
 				<input asp-for="Email" class="form-control rounded-pill">
 				<span asp-validation-for="Email" class="text-danger"></span>
 			</div>
-			<div class="mb-3">
+			<div class="mb-3" id="password-container">
 				<label asp-for="Password" class="form-label"></label>
-				<input asp-for="Password" class="form-control rounded-pill">
+				<div class="position-relative">
+					<input asp-for="Password" id="password" class="form-control rounded-pill" type="password">
+					<img src="/images/eye-close.png" id="eyeicon" onclick="convert()" alt="Toggle password visibility">
+				</div>
 				<span asp-validation-for="Password" class="text-danger"></span>
 			</div>
 			<div class="float-end">
@@ -58,4 +61,32 @@
 		margin-right: 20px;
 		margin-left:20px;
 	}
+
+	#eyeicon {
+		cursor: pointer;
+		position: absolute;
+		right: 10px;
+		top: 10px;
+		width: 20px;
+		height: 20px;
+	}
+
+	#password-container {
+		position: relative;
+	}
 </style>
+
+<script>
+	function convert() {
+		const password = document.getElementById("password");
+		const eyeicon = document.getElementById("eyeicon");
+
+		if (password.type === "password") {
+			password.type = "text";
+			eyeicon.src = "/images/eye-open.png";
+		} else {
+			password.type = "password";
+			eyeicon.src = "/images/eye-close.png";
+		}
+	};
+</script>
